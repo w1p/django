@@ -366,6 +366,15 @@ class NumericPasswordValidatorTest(SimpleTestCase):
 
 
 class UsernameValidatorsTests(SimpleTestCase):
+    def test_trailing_newline_is_rejected(self):
+        for validator in (
+            validators.UnicodeUsernameValidator(),
+            validators.ASCIIUsernameValidator(),
+        ):
+            with self.subTest(validator=validator.__class__.__name__):
+                with self.assertRaises(ValidationError):
+                    validator("alice\n")
+
     def test_unicode_validator(self):
         valid_usernames = ["joe", "René", "ᴮᴵᴳᴮᴵᴿᴰ", "أحمد"]
         invalid_usernames = [
